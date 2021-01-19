@@ -1,3 +1,7 @@
+#[macro_use] extern crate peroxide;
+
+mod game;
+
 fn main() {
-    println!("Hello, world!");
+    game::new_game();
 }
