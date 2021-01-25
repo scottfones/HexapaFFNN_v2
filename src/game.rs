@@ -63,8 +63,18 @@ impl Location {
     pub fn check_advance(&self, s: &GameState) -> bool {
         let dst;
         match s.player {
-            Player::Max => dst = Location{m: self.m + 1, n: self.n},
-            Player::Min => dst = Location{m: self.m - 1, n: self.n},
+            Player::Max => {
+                dst = Location {
+                    m: self.m + 1,
+                    n: self.n,
+                }
+            }
+            Player::Min => {
+                dst = Location {
+                    m: self.m - 1,
+                    n: self.n,
+                }
+            }
         }
 
         dst.is_in_bounds() && s.board[(dst.m, dst.n)] == 0.0
