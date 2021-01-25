@@ -27,13 +27,12 @@ pub struct GameState {
 impl GameState {
     pub fn advance(&self, src: Location) -> GameState {
         let new_m;
-
         match self.player {
             Player::Max => new_m = src.m + 1,
             Player::Min => new_m = src.m - 1,
         }
 
-        let dst = Location{m: new_m, n: src.n};
+        let dst = Location { m: new_m, n: src.n };
         self.update(dst, src)
     }
 
@@ -41,12 +40,15 @@ impl GameState {
         let p = self.player.next_player();
         let mut b = self.board.clone();
 
-        println!("src: {:?}, val: {:?}", src,  self.board[(src.m, src.n)]);
-        println!("dst: {:?}, val: {:?}", dst,  self.board[(dst.m, dst.n)]);
+        println!("src: {:?}, val: {:?}", src, self.board[(src.m, src.n)]);
+        println!("dst: {:?}, val: {:?}", dst, self.board[(dst.m, dst.n)]);
         b[(dst.m, dst.n)] = self.board[(src.m, src.n)];
         b[(src.m, src.n)] = 0.0;
 
-        GameState{player: p, board: b}
+        GameState {
+            player: p,
+            board: b,
+        }
     }
 }
 
@@ -58,16 +60,17 @@ pub struct Location {
 }
 
 impl Location {
-    pub fn advance(&self, s: &GameState) -> Location {
-        let player = &s.player;
-
-        match player {
-            Player::Max => Location{m: self.m+1, n: self.n},
-            Player::Min => Location{m: self.m-1, n: self.n}
+    pub fn check_advance(&self, s: &GameState) -> bool {
+        let dst;
+        match s.player {
+            Player::Max => dst = Location{m: self.m + 1, n: self.n},
+            Player::Min => dst = Location{m: self.m - 1, n: self.n},
         }
+
+        dst.is_in_bounds() && s.board[(dst.m, dst.n)] == 0.0
     }
 
-    pub fn is_valid(&self) -> bool {
+    pub fn is_in_bounds(&self) -> bool {
         (0..3).contains(&self.m) && (0..3).contains(&self.n)
     }
 }
