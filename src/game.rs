@@ -26,14 +26,14 @@ pub struct GameState {
 
 impl GameState {
     pub fn advance(&self, src: Location) -> GameState {
-        let new_n;
+        let new_m;
 
         match self.player {
-            Player::Max => new_n = src.n + 1,
-            Player::Min => new_n = src.n - 1,
+            Player::Max => new_m = src.m + 1,
+            Player::Min => new_m = src.m - 1,
         }
 
-        let dst = Location{m: src.m, n: new_n};
+        let dst = Location{m: new_m, n: src.n};
         self.update(dst, src)
     }
 
@@ -41,6 +41,8 @@ impl GameState {
         let p = self.player.next_player();
         let mut b = self.board.clone();
 
+        println!("src: {:?}, val: {:?}", src,  self.board[(src.m, src.n)]);
+        println!("dst: {:?}, val: {:?}", dst,  self.board[(dst.m, dst.n)]);
         b[(dst.m, dst.n)] = self.board[(src.m, src.n)];
         b[(src.m, src.n)] = 0.0;
 
