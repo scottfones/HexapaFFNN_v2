@@ -151,6 +151,18 @@ impl GameState {
         self.update(dst, src)
     }
 
+    pub fn is_terminal(&self) -> bool {
+        for i in 0..3 {
+            if self.board[(0, i)] == Player::Min.value()
+                || self.board[(2, i)] == Player::Max.value()
+            {
+                return true;
+            }
+        }
+
+        self.actions().is_empty()
+    }
+
     pub fn result(&self, a: PlayerAction) -> GameState {
         match a.action {
             Action::Advance => self.advance(a.src),
