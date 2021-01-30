@@ -16,6 +16,13 @@ impl Player {
             Player::Min => Player::Max,
         }
     }
+
+    pub fn value(&self) -> i8 {
+        match *self {
+            Player::Max => 1,
+            Player::Min => -1,
+        }
+    }
 }
 
 impl fmt::Display for Player {
@@ -35,6 +42,27 @@ pub struct GameState {
 }
 
 impl GameState {
+    pub fn actions(&self) {
+        for (idx, val) in self.board.indexed_iter() {
+            if *val == self.player.value() {
+                let src = Location { m: idx.0, n: idx.1 };
+
+                if src.check_advance(&self) {
+                    println!("({},{}) could advance.", idx.0, idx.1);
+                }
+
+                if src.check_capture_left(&self) {
+                    println!("({},{}) could capture left.", idx.0, idx.1);
+                }
+
+                if src.check_capture_right(&self) {
+                    println!("({},{}) could capture right.", idx.0, idx.1);
+                }
+            }
+            //println!("idx: {},{}, val: {}", idx.0, idx.1, val);
+        }
+    }
+
     pub fn advance(&self, src: Location) -> GameState {
         let new_m;
         match self.player {
