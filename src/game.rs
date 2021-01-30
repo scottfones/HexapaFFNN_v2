@@ -46,12 +46,48 @@ impl GameState {
         self.update(dst, src)
     }
 
+    pub fn capture_left(&self, src: Location) -> GameState {
+        let new_m;
+        let new_n;
+        match self.player {
+            Player::Max => {
+                new_m = src.m + 1;
+                new_n = src.n - 1;
+            },
+            Player::Min => {
+                new_m = src.m - 1;
+                new_n = src.n - 1;
+            },
+        }
+
+        let dst = Location { m: new_m, n: new_n };
+        self.update(dst, src)
+    }
+
+    pub fn capture_right(&self, src: Location) -> GameState {
+        let new_m;
+        let new_n;
+        match self.player {
+            Player::Max => {
+                new_m = src.m + 1;
+                new_n = src.n + 1;
+            },
+            Player::Min => {
+                new_m = src.m - 1;
+                new_n = src.n + 1;
+            },
+        }
+
+        let dst = Location { m: new_m, n: new_n };
+        self.update(dst, src)
+    }
+
     pub fn update(&self, dst: Location, src: Location) -> GameState {
         let p = self.player.next();
         let mut b = self.board.clone();
 
-        println!("src: {:?}, val: {:?}", src, self.board[(src.m, src.n)]);
-        println!("dst: {:?}, val: {:?}", dst, self.board[(dst.m, dst.n)]);
+        //println!("src: {:?}, val: {:?}", src, self.board[(src.m, src.n)]);
+        //println!("dst: {:?}, val: {:?}", dst, self.board[(dst.m, dst.n)]);
         b[(dst.m, dst.n)] = self.board[(src.m, src.n)];
         b[(src.m, src.n)] = 0;
 
@@ -66,7 +102,7 @@ impl fmt::Display for GameState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "\nBoard:\n{:4}\n{:4}\n{:4}\nCurrent Player: {}\n",
+            "\nBoard:\n{:4}\n{:4}\n{:4}\nNext Player: {}\n",
             self.board.row(0),
             self.board.row(1),
             self.board.row(2),
@@ -112,10 +148,29 @@ impl Location {
                 }
             }
             Player::Min => {
-                if self.m == 0 {
+                if self.m == 0 || self.n == 0 {
                     false
                 } else {
-                    s.board[(self.m - 1, self.n)] == 0
+                    s.board[(self.m - 1, self.n - 1)] == 1
+                }
+            }
+        }
+    }
+
+    pub fn check_capture_right(&self, s: &GameState) -> bool {
+        match s.player {
+            Player::Max => {
+                if self.m == 2 || self.n == 2 {
+                    false
+                } else {
+                    s.board[(self.m + 1, self.n + 1)] == -1
+                }
+            }
+            Player::Min => {
+                if self.m == 0 || self.n == 2 {
+                    false
+                } else {
+                    s.board[(self.m - 1, self.n + 1)] == 1
                 }
             }
         }
