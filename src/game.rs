@@ -53,11 +53,11 @@ impl GameState {
             Player::Max => {
                 new_m = src.m + 1;
                 new_n = src.n - 1;
-            },
+            }
             Player::Min => {
                 new_m = src.m - 1;
                 new_n = src.n - 1;
-            },
+            }
         }
 
         let dst = Location { m: new_m, n: new_n };
@@ -71,11 +71,11 @@ impl GameState {
             Player::Max => {
                 new_m = src.m + 1;
                 new_n = src.n + 1;
-            },
+            }
             Player::Min => {
                 new_m = src.m - 1;
                 new_n = src.n + 1;
-            },
+            }
         }
 
         let dst = Location { m: new_m, n: new_n };
