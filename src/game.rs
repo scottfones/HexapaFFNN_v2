@@ -1,5 +1,6 @@
 /// Contains functions defining the game and valid moves.
 use peroxide::prelude::*;
+use std::fmt;
 
 /// Explicit player value
 #[derive(Debug)]
@@ -13,6 +14,15 @@ impl Player {
         match *self {
             Player::Max => Player::Min,
             Player::Min => Player::Max,
+        }
+    }
+}
+
+impl fmt::Display for Player {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Player::Max => write!(f, "Max"),
+            Player::Min => write!(f, "Min"),
         }
     }
 }
@@ -49,6 +59,12 @@ impl GameState {
             player: p,
             board: b,
         }
+    }
+}
+
+impl fmt::Display for GameState {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "\nBoard:\n{}\nCurrent Player: {}\n", self.board, self.player)
     }
 }
 
