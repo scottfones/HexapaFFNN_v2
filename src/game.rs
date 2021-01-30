@@ -9,8 +9,8 @@ pub enum Player {
 }
 
 impl Player {
-    pub fn next_player(&self) -> Player {
-        match self {
+    pub fn next(&self) -> Player {
+        match *self {
             Player::Max => Player::Min,
             Player::Min => Player::Max,
         }
@@ -37,7 +37,7 @@ impl GameState {
     }
 
     pub fn update(&self, dst: Location, src: Location) -> GameState {
-        let p = self.player.next_player();
+        let p = self.player.next();
         let mut b = self.board.clone();
 
         println!("src: {:?}, val: {:?}", src, self.board[(src.m, src.n)]);
