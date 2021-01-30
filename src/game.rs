@@ -3,7 +3,6 @@ use ndarray::prelude::*;
 use std::fmt;
 
 /// Explicit player value
-#[derive(Debug)]
 pub enum Player {
     Max,
     Min,
@@ -35,7 +34,6 @@ impl fmt::Display for Player {
 }
 
 /// Store current player and board state
-#[derive(Debug)]
 pub struct GameState {
     pub player: Player,
     pub board: Array<i8, Ix2>,
@@ -140,7 +138,6 @@ impl fmt::Display for GameState {
 }
 
 /// m by n index values within the game matrix
-#[derive(Debug)]
 pub struct Location {
     pub m: usize,
     pub n: usize,
@@ -172,14 +169,14 @@ impl Location {
                 if self.m == 2 || self.n == 0 {
                     false
                 } else {
-                    s.board[(self.m + 1, self.n - 1)] == -1
+                    s.board[(self.m + 1, self.n - 1)] == Player::Min.value()
                 }
             }
             Player::Min => {
                 if self.m == 0 || self.n == 0 {
                     false
                 } else {
-                    s.board[(self.m - 1, self.n - 1)] == 1
+                    s.board[(self.m - 1, self.n - 1)] == Player::Max.value()
                 }
             }
         }
@@ -191,14 +188,14 @@ impl Location {
                 if self.m == 2 || self.n == 2 {
                     false
                 } else {
-                    s.board[(self.m + 1, self.n + 1)] == -1
+                    s.board[(self.m + 1, self.n + 1)] == Player::Min.value()
                 }
             }
             Player::Min => {
                 if self.m == 0 || self.n == 2 {
                     false
                 } else {
-                    s.board[(self.m - 1, self.n + 1)] == 1
+                    s.board[(self.m - 1, self.n + 1)] == Player::Max.value()
                 }
             }
         }
