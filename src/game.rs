@@ -64,7 +64,14 @@ impl GameState {
 
 impl fmt::Display for GameState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "\nBoard:\n{:4}\n{:4}\n{:4}\nCurrent Player: {}\n", self.board.row(0), self.board.row(1), self.board.row(2), self.player)
+        write!(
+            f,
+            "\nBoard:\n{:4}\n{:4}\n{:4}\nCurrent Player: {}\n",
+            self.board.row(0),
+            self.board.row(1),
+            self.board.row(2),
+            self.player
+        )
     }
 }
 
@@ -82,16 +89,16 @@ impl Location {
                 if self.m == 2 {
                     false
                 } else {
-                    s.board[(self.m+1, self.n)] == 0
+                    s.board[(self.m + 1, self.n)] == 0
                 }
-            },
+            }
             Player::Min => {
                 if self.m == 0 {
                     false
                 } else {
-                    s.board[(self.m-1, self.n)] == 0
+                    s.board[(self.m - 1, self.n)] == 0
                 }
-            },
+            }
         }
     }
 
@@ -101,16 +108,16 @@ impl Location {
                 if self.m == 2 || self.n == 0 {
                     false
                 } else {
-                    s.board[(self.m+1, self.n-1)] == -1
+                    s.board[(self.m + 1, self.n - 1)] == -1
                 }
-            },
+            }
             Player::Min => {
                 if self.m == 0 {
                     false
                 } else {
-                    s.board[(self.m-1, self.n)] == 0
+                    s.board[(self.m - 1, self.n)] == 0
                 }
-            },
+            }
         }
     }
 
