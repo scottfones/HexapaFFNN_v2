@@ -32,4 +32,11 @@ fn main() {
             }
         }
     }
+
+    println!("{}", g0);
+    g0.actions();
+
+    let s1 = g0.advance(game::Location{m:0,n:0});
+    println!("{}", s1);
+    s1.actions();
 }
