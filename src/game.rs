@@ -1,5 +1,5 @@
 /// Contains functions defining the game and valid moves.
-use peroxide::prelude::*;
+use ndarray::prelude::*;
 use std::fmt;
 
 /// Explicit player value
@@ -31,7 +31,7 @@ impl fmt::Display for Player {
 #[derive(Debug)]
 pub struct GameState {
     pub player: Player,
-    pub board: Matrix,
+    pub board: Array<i8, Ix2>,
 }
 
 impl GameState {
@@ -53,7 +53,7 @@ impl GameState {
         println!("src: {:?}, val: {:?}", src, self.board[(src.m, src.n)]);
         println!("dst: {:?}, val: {:?}", dst, self.board[(dst.m, dst.n)]);
         b[(dst.m, dst.n)] = self.board[(src.m, src.n)];
-        b[(src.m, src.n)] = 0.0;
+        b[(src.m, src.n)] = 0;
 
         GameState {
             player: p,
@@ -64,7 +64,7 @@ impl GameState {
 
 impl fmt::Display for GameState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "\nBoard:\n{}\nCurrent Player: {}\n", self.board, self.player)
+        write!(f, "\nBoard:\n{:4}\n{:4}\n{:4}\nCurrent Player: {}\n", self.board.row(0), self.board.row(1), self.board.row(2), self.player)
     }
 }
 
@@ -77,23 +77,41 @@ pub struct Location {
 
 impl Location {
     pub fn check_advance(&self, s: &GameState) -> bool {
-        let dst;
         match s.player {
             Player::Max => {
-                dst = Location {
-                    m: self.m + 1,
-                    n: self.n,
+                if self.m == 2 {
+                    false
+                } else {
+                    s.board[(self.m+1, self.n)] == 0
                 }
-            }
+            },
             Player::Min => {
-                dst = Location {
-                    m: self.m - 1,
-                    n: self.n,
+                if self.m == 0 {
+                    false
+                } else {
+                    s.board[(self.m-1, self.n)] == 0
                 }
-            }
+            },
         }
+    }
 
-        dst.is_in_bounds() && s.board[(dst.m, dst.n)] == 0.0
+    pub fn check_capture_left(&self, s: &GameState) -> bool {
+        match s.player {
+            Player::Max => {
+                if self.m == 2 || self.n == 0 {
+                    false
+                } else {
+                    s.board[(self.m+1, self.n-1)] == -1
+                }
+            },
+            Player::Min => {
+                if self.m == 0 {
+                    false
+                } else {
+                    s.board[(self.m-1, self.n)] == 0
+                }
+            },
+        }
     }
 
     pub fn is_in_bounds(&self) -> bool {
@@ -104,7 +122,7 @@ impl Location {
 /// Initialize new game state
 pub fn new_game() -> GameState {
     let p = Player::Max;
-    let b = matrix(c!(1, 1, 1, 0, 0, 0, -1, -1, -1), 3, 3, Row);
+    let b = arr2(&[[1, 1, 1], [0, 0, 0], [-1, -1, -1]]);
     GameState {
         player: p,
         board: b,
