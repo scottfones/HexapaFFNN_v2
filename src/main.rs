@@ -39,7 +39,7 @@ fn main() {
         println!("{}", a);
     }
 
-    let s1 = g0.advance(game::Location{m:0,n:0});
+    let s1 = g0.advance(game::Location { m: 0, n: 0 });
     println!("{}", s1);
     s1.actions();
 }

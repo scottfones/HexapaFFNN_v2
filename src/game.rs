@@ -12,7 +12,7 @@ impl fmt::Display for Action {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match *self {
             Action::Advance => write!(f, "Advance"),
-            Action::CaptureLeft=> write!(f, "CaptureLeft"),
+            Action::CaptureLeft => write!(f, "CaptureLeft"),
             Action::CaptureRight => write!(f, "CaptureRight"),
         }
     }
@@ -78,17 +78,26 @@ impl GameState {
 
                 if src.check_advance(&self) {
                     println!("({},{}) could advance.", idx.0, idx.1);
-                    action_list.push(PlayerAction{action: Action::Advance, src: Location{ m: idx.0, n: idx.1}});
+                    action_list.push(PlayerAction {
+                        action: Action::Advance,
+                        src: Location { m: idx.0, n: idx.1 },
+                    });
                 }
 
                 if src.check_capture_left(&self) {
                     println!("({},{}) could capture left.", idx.0, idx.1);
-                    action_list.push(PlayerAction{action: Action::CaptureLeft, src: Location{ m: idx.0, n: idx.1}});
+                    action_list.push(PlayerAction {
+                        action: Action::CaptureLeft,
+                        src: Location { m: idx.0, n: idx.1 },
+                    });
                 }
 
                 if src.check_capture_right(&self) {
                     println!("({},{}) could capture right.", idx.0, idx.1);
-                    action_list.push(PlayerAction{action: Action::CaptureRight, src: Location{ m: idx.0, n: idx.1}});
+                    action_list.push(PlayerAction {
+                        action: Action::CaptureRight,
+                        src: Location { m: idx.0, n: idx.1 },
+                    });
                 }
             }
         }
@@ -253,7 +262,6 @@ impl fmt::Display for Location {
         write!(f, "({}, {})", self.m, self.n)
     }
 }
-
 
 /// Initialize new game state
 pub fn new_game() -> GameState {
