@@ -2,6 +2,25 @@
 use ndarray::prelude::*;
 use std::fmt;
 
+pub enum Action {
+    Advance,
+    CaptureLeft,
+    CaptureRight,
+}
+
+impl fmt::Display for Action {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Action::Advance => write!(f, "Advance"),
+            Action::CaptureLeft=> write!(f, "CaptureLeft"),
+            Action::CaptureRight => write!(f, "CaptureRight"),
+        }
+    }
+}
+
+/// Hold all possible actions for a given turn
+type ActionList = Vec<PlayerAction>;
+
 /// Explicit player value
 pub enum Player {
     Max,
@@ -33,6 +52,17 @@ impl fmt::Display for Player {
     }
 }
 
+pub struct PlayerAction {
+    pub action: Action,
+    pub src: Location,
+}
+
+impl fmt::Display for PlayerAction {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Action: {} @ {}", self.action, self.src)
+    }
+}
+
 /// Store current player and board state
 pub struct GameState {
     pub player: Player,
@@ -40,25 +70,29 @@ pub struct GameState {
 }
 
 impl GameState {
-    pub fn actions(&self) {
+    pub fn actions(&self) -> ActionList {
+        let mut action_list: Vec<PlayerAction> = Vec::new();
         for (idx, val) in self.board.indexed_iter() {
             if *val == self.player.value() {
                 let src = Location { m: idx.0, n: idx.1 };
 
                 if src.check_advance(&self) {
                     println!("({},{}) could advance.", idx.0, idx.1);
+                    action_list.push(PlayerAction{action: Action::Advance, src: Location{ m: idx.0, n: idx.1}});
                 }
 
                 if src.check_capture_left(&self) {
                     println!("({},{}) could capture left.", idx.0, idx.1);
+                    action_list.push(PlayerAction{action: Action::CaptureLeft, src: Location{ m: idx.0, n: idx.1}});
                 }
 
                 if src.check_capture_right(&self) {
                     println!("({},{}) could capture right.", idx.0, idx.1);
+                    action_list.push(PlayerAction{action: Action::CaptureRight, src: Location{ m: idx.0, n: idx.1}});
                 }
             }
-            //println!("idx: {},{}, val: {}", idx.0, idx.1, val);
         }
+        action_list
     }
 
     pub fn advance(&self, src: Location) -> GameState {
@@ -108,7 +142,15 @@ impl GameState {
         self.update(dst, src)
     }
 
-    pub fn update(&self, dst: Location, src: Location) -> GameState {
+    pub fn result(&self, a: PlayerAction) -> GameState {
+        match a.action {
+            Action::Advance => self.advance(a.src),
+            Action::CaptureLeft => self.capture_left(a.src),
+            Action::CaptureRight => self.capture_right(a.src),
+        }
+    }
+
+    fn update(&self, dst: Location, src: Location) -> GameState {
         let p = self.player.next();
         let mut b = self.board.clone();
 
@@ -128,7 +170,7 @@ impl fmt::Display for GameState {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(
             f,
-            "\nBoard:\n{:4}\n{:4}\n{:4}\nNext Player: {}\n",
+            "\nBoard:\n{:3}\n{:3}\n{:3}\nNext Player: {}\n",
             self.board.row(0),
             self.board.row(1),
             self.board.row(2),
@@ -205,6 +247,13 @@ impl Location {
         (0..3).contains(&self.m) && (0..3).contains(&self.n)
     }
 }
+
+impl fmt::Display for Location {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "({}, {})", self.m, self.n)
+    }
+}
+
 
 /// Initialize new game state
 pub fn new_game() -> GameState {
