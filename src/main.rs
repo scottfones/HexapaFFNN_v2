@@ -42,4 +42,22 @@ fn main() {
     let s1 = g0.advance(game::Location { m: 0, n: 0 });
     println!("{}", s1);
     s1.actions();
+
+    let s2 = s1.capture_left(game::Location { m: 2, n: 1 });
+    println!("{}", s2);
+    s2.actions();
+    
+    let s3 = s2.advance(game::Location { m: 0, n: 1 });
+    println!("{}", s3);
+    s3.actions();
+
+    let s4 = s3.advance(game::Location { m: 2, n: 2 });
+    println!("{}", s4);
+    s4.actions();
+
+    let s5 = s4.advance(game::Location { m: 1, n: 1 });
+    println!("{}", s5);
+    s5.actions();
+
+    println!("{}", s5.is_terminal());
 }
