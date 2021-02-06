@@ -3,7 +3,7 @@ extern crate ndarray;
 pub mod game;
 
 fn main() {
-    let g0 = game::new_game();
+    let g0 = game::GameState::new_game();
     println!("{}", g0);
 
     // Max move 1
