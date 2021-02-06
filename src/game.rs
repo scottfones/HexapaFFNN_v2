@@ -21,48 +21,6 @@ impl fmt::Display for Action {
 /// Hold all possible actions for a given turn
 type ActionList = Vec<PlayerAction>;
 
-/// Explicit player value
-pub enum Player {
-    Max,
-    Min,
-}
-
-impl Player {
-    pub fn next(&self) -> Player {
-        match *self {
-            Player::Max => Player::Min,
-            Player::Min => Player::Max,
-        }
-    }
-
-    pub fn value(&self) -> i8 {
-        match *self {
-            Player::Max => 1,
-            Player::Min => -1,
-        }
-    }
-}
-
-impl fmt::Display for Player {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        match *self {
-            Player::Max => write!(f, "Max"),
-            Player::Min => write!(f, "Min"),
-        }
-    }
-}
-
-pub struct PlayerAction {
-    pub action: Action,
-    pub src: Location,
-}
-
-impl fmt::Display for PlayerAction {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Action: {} @ {}", self.action, self.src)
-    }
-}
-
 /// Store current player and board state
 pub struct GameState {
     pub player: Player,
@@ -282,5 +240,47 @@ impl Location {
 impl fmt::Display for Location {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "({}, {})", self.m, self.n)
+    }
+}
+
+/// Explicit player value
+pub enum Player {
+    Max,
+    Min,
+}
+
+impl Player {
+    pub fn next(&self) -> Player {
+        match *self {
+            Player::Max => Player::Min,
+            Player::Min => Player::Max,
+        }
+    }
+
+    pub fn value(&self) -> i8 {
+        match *self {
+            Player::Max => 1,
+            Player::Min => -1,
+        }
+    }
+}
+
+impl fmt::Display for Player {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        match *self {
+            Player::Max => write!(f, "Max"),
+            Player::Min => write!(f, "Min"),
+        }
+    }
+}
+
+pub struct PlayerAction {
+    pub action: Action,
+    pub src: Location,
+}
+
+impl fmt::Display for PlayerAction {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "Action: {} @ {}", self.action, self.src)
     }
 }
