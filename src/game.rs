@@ -2,6 +2,7 @@
 use ndarray::prelude::*;
 use std::fmt;
 
+/// All possible actions
 pub enum Action {
     Advance,
     CaptureLeft,
@@ -21,13 +22,14 @@ impl fmt::Display for Action {
 /// Hold all possible actions for a given turn
 type ActionList = Vec<PlayerAction>;
 
-/// Store current player and board state
+/// Associate current player and board state
 pub struct GameState {
     pub player: Player,
     pub board: Array<i8, Ix2>,
 }
 
 impl GameState {
+    /// Return `ActionList`, a vector of all legal moves given the `Gamestate`
     pub fn actions(&self) -> ActionList {
         let mut action_list: Vec<PlayerAction> = Vec::new();
         for (idx, val) in self.board.indexed_iter() {
@@ -62,6 +64,14 @@ impl GameState {
         action_list
     }
 
+    /// Return new `GameState` where piece at `src` has been advanced. 
+    /// 
+    /// Calculates destination relative to current player and calls `update(dst, src)`
+    /// to create the new `GameState`. 
+    /// 
+    /// # Arguments
+    /// 
+    /// `src` - the `Location` of the piece to be advanced
     pub fn advance(&self, src: Location) -> GameState {
         let new_m;
         match self.player {
@@ -73,6 +83,14 @@ impl GameState {
         self.update(dst, src)
     }
 
+    /// Return new `GameState` where piece at `src` has taken the opposing piece diagonally to the left. 
+    /// 
+    /// Calculates destination relative to current player and calls `update(dst, src)`
+    /// to create the new `GameState`. 
+    /// 
+    /// # Arguments
+    /// 
+    /// `src` - the `Location` of the piece initiating the capture
     pub fn capture_left(&self, src: Location) -> GameState {
         let new_m;
         let new_n;
@@ -91,6 +109,14 @@ impl GameState {
         self.update(dst, src)
     }
 
+    /// Return new `GameState` where piece at `src` has taken the opposing piece diagonally to the right. 
+    /// 
+    /// Calculates destination relative to current player and calls `update(dst, src)`
+    /// to create the new `GameState`. 
+    /// 
+    /// # Arguments
+    /// 
+    /// `src` - the `Location` of the piece initiating the capture
     pub fn capture_right(&self, src: Location) -> GameState {
         let new_m;
         let new_n;
@@ -109,6 +135,8 @@ impl GameState {
         self.update(dst, src)
     }
 
+    /// `GameState` is terminal if a board transversal has occured, 
+    /// or the current player is not able to move.
     pub fn is_terminal(&self) -> bool {
         for i in 0..3 {
             if self.board[(0, i)] == Player::Min.value()
@@ -131,6 +159,11 @@ impl GameState {
         }
     }
 
+    /// Return the `GameState` resulting from a given `PlayerAction`.
+    /// 
+    /// # Arguments
+    /// 
+    /// `a` - A `PlayerAction` to be applied to the current `GameState`
     pub fn result(&self, a: PlayerAction) -> GameState {
         match a.action {
             Action::Advance => self.advance(a.src),
@@ -139,6 +172,14 @@ impl GameState {
         }
     }
 
+    /// Return a `GameState` with the piece originating in `src` moved to `dst`,
+    /// and the empty `src` location filled with a zero. 
+    /// 
+    /// # Arguments
+    /// 
+    /// `dst` - The new `Location`
+    /// 
+    /// `src` - The original, current, `Location`
     fn update(&self, dst: Location, src: Location) -> GameState {
         let p = self.player.next();
         let mut b = self.board.clone();
