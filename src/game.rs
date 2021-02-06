@@ -163,6 +163,16 @@ impl GameState {
         self.actions().is_empty()
     }
 
+    /// Initialize new game state
+    pub fn new_game() -> GameState {
+        let p = Player::Max;
+        let b = arr2(&[[1, 1, 1], [0, 0, 0], [-1, -1, -1]]);
+        GameState {
+            player: p,
+            board: b,
+        }
+    }
+
     pub fn result(&self, a: PlayerAction) -> GameState {
         match a.action {
             Action::Advance => self.advance(a.src),
@@ -272,15 +282,5 @@ impl Location {
 impl fmt::Display for Location {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "({}, {})", self.m, self.n)
-    }
-}
-
-/// Initialize new game state
-pub fn new_game() -> GameState {
-    let p = Player::Max;
-    let b = arr2(&[[1, 1, 1], [0, 0, 0], [-1, -1, -1]]);
-    GameState {
-        player: p,
-        board: b,
     }
 }
