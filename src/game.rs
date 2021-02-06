@@ -64,13 +64,13 @@ impl GameState {
         action_list
     }
 
-    /// Return new `GameState` where piece at `src` has been advanced. 
-    /// 
+    /// Return new `GameState` where piece at `src` has been advanced.
+    ///
     /// Calculates destination relative to current player and calls `update(dst, src)`
-    /// to create the new `GameState`. 
-    /// 
+    /// to create the new `GameState`.
+    ///
     /// # Arguments
-    /// 
+    ///
     /// `src` - the `Location` of the piece to be advanced
     pub fn advance(&self, src: Location) -> GameState {
         let new_m;
@@ -83,13 +83,13 @@ impl GameState {
         self.update(dst, src)
     }
 
-    /// Return new `GameState` where piece at `src` has taken the opposing piece diagonally to the left. 
-    /// 
+    /// Return new `GameState` where piece at `src` has taken the opposing piece diagonally to the left.
+    ///
     /// Calculates destination relative to current player and calls `update(dst, src)`
-    /// to create the new `GameState`. 
-    /// 
+    /// to create the new `GameState`.
+    ///
     /// # Arguments
-    /// 
+    ///
     /// `src` - the `Location` of the piece initiating the capture
     pub fn capture_left(&self, src: Location) -> GameState {
         let new_m;
@@ -109,13 +109,13 @@ impl GameState {
         self.update(dst, src)
     }
 
-    /// Return new `GameState` where piece at `src` has taken the opposing piece diagonally to the right. 
-    /// 
+    /// Return new `GameState` where piece at `src` has taken the opposing piece diagonally to the right.
+    ///
     /// Calculates destination relative to current player and calls `update(dst, src)`
-    /// to create the new `GameState`. 
-    /// 
+    /// to create the new `GameState`.
+    ///
     /// # Arguments
-    /// 
+    ///
     /// `src` - the `Location` of the piece initiating the capture
     pub fn capture_right(&self, src: Location) -> GameState {
         let new_m;
@@ -135,7 +135,7 @@ impl GameState {
         self.update(dst, src)
     }
 
-    /// `GameState` is terminal if a board transversal has occured, 
+    /// `GameState` is terminal if a board transversal has occured,
     /// or the current player is not able to move.
     pub fn is_terminal(&self) -> bool {
         for i in 0..3 {
@@ -160,9 +160,9 @@ impl GameState {
     }
 
     /// Return the `GameState` resulting from a given `PlayerAction`.
-    /// 
+    ///
     /// # Arguments
-    /// 
+    ///
     /// `a` - A `PlayerAction` to be applied to the current `GameState`
     pub fn result(&self, a: PlayerAction) -> GameState {
         match a.action {
@@ -173,12 +173,12 @@ impl GameState {
     }
 
     /// Return a `GameState` with the piece originating in `src` moved to `dst`,
-    /// and the empty `src` location filled with a zero. 
-    /// 
+    /// and the empty `src` location filled with a zero.
+    ///
     /// # Arguments
-    /// 
+    ///
     /// `dst` - The new `Location`
-    /// 
+    ///
     /// `src` - The original, current, `Location`
     fn update(&self, dst: Location, src: Location) -> GameState {
         let p = self.player.next();

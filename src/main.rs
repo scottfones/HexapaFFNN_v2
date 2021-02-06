@@ -46,7 +46,7 @@ fn main() {
     let s2 = s1.capture_left(game::Location { m: 2, n: 1 });
     println!("{}", s2);
     s2.actions();
-    
+
     let s3 = s2.advance(game::Location { m: 0, n: 1 });
     println!("{}", s3);
     s3.actions();
