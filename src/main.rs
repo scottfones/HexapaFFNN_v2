@@ -60,4 +60,5 @@ fn main() {
     s5.actions();
 
     println!("{}", s5.is_terminal());
+    s5.to_vector();
 }
