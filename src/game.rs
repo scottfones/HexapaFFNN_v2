@@ -1,4 +1,5 @@
-/// Contains functions defining the game and valid moves.
+/// Contains functions defining the game and valid actions.
+
 use ndarray::prelude::*;
 use std::fmt;
 
@@ -170,6 +171,15 @@ impl GameState {
             Action::CaptureLeft => self.capture_left(a.src),
             Action::CaptureRight => self.capture_right(a.src),
         }
+    }
+
+    /// Return `GameState` as a Vector.
+    pub fn to_vector(&self) -> Vec<i8> {
+        let b = self.board.clone();
+        let mut vec_rep =  vec![self.player.value()];
+        vec_rep.append(&mut b.into_raw_vec());
+        println!("{:?}", vec_rep);
+        vec_rep
     }
 
     /// Return a `GameState` with the piece originating in `src` moved to `dst`,
